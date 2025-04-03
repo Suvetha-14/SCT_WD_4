@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced To-Do Web App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Boldonse&family=Lilita+One&family=Lobster&family=Mystery+Quest&family=Oleo+Script:wght@400;700&display=swap" rel="stylesheet">
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url("https://png.pngtree.com/thumb_back/fh260/background/20231027/pngtree-hexagonal-abstract-background-with-a-black-textured-surface-image_13704307.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+    font-family: 'Poppins', sans-serif;
+}
+
+        
+.getstarted-button {
+    position:center;
+    
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius:10px;
+}
+
+        
+        .container {
+            width: 60%;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            text-align: center;
+            border:8px inset black;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .purpose-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .purpose-options button, button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+
+        input, select {
+    width: 90%; /* Ensures all input fields have the same width */
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid black;
+    border-radius: 5px;
+    display: block;
+    font-size: 16px;
+}
+
+#taskPriority {
+    appearance: none; 
+width:93%;
+}
+
+        
+        .task {
+            display: flex;
+            justify-content: space-between;
+            background-color: #e9ecef;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .completed .icons i {
+            color: green;
+        }
+
+        .icons i {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .back-button {
+            margin-top: 10px;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div class="container" id="loginPage" STYLE>
+        <h2>Welcome to To-Do Web App</h2>
+        <button class="getstarted-button" onclick="proceedToPurpose()">Getstarted</button>
+
+    </div>
+
+    <div class="container hidden" id="purposePage">
+        <h3>What is your purpose for using the To-Do List?</h3>
+        <div class="purpose-options">
+            <button onclick="selectPurpose('Office')">Office</button><br>
+
+            <button onclick="selectPurpose('Educational')">Educational</button><br>
+
+            <button onclick="selectPurpose('Personal Growth')">Personal Growth</button><br>
+
+            <button onclick="selectPurpose('Daily Routine')">Daily Routine</button><br>
+
+        </div>
+        <button class="back-button" onclick="goBackToLogin()">Back</button>
+    </div>
+
+    <div class="container hidden" id="todoApp">
+        <h2>To-Do List for <span id="selectedPurpose"></span></h2>
+        <input type="text" id="taskInput" placeholder="Add your task">
+        <input type="datetime-local" id="taskTime">
+        <select id="taskPriority" style="border:2px solidblack;">
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </select><br>
+        <button onclick="addTask()">Add Task</button>
+        <button class="back-button" onclick="goBackToPurpose()">Back</button>
+        <div id="taskList"></div>
+    </div>
+
+    <script>
+        function proceedToPurpose() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('purposePage').classList.remove('hidden');
+        }
+
+        function selectPurpose(purpose) {
+            document.getElementById('purposePage').classList.add('hidden');
+            document.getElementById('todoApp').classList.remove('hidden');
+            document.getElementById('selectedPurpose').innerText = purpose;
+        }
+
+        function goBackToLogin() {
+            document.getElementById('purposePage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+        }
+
+        function goBackToPurpose() {
+            document.getElementById('todoApp').classList.add('hidden');
+            document.getElementById('purposePage').classList.remove('hidden');
+        }
+
+        function addTask() {
+            const taskInput = document.getElementById("taskInput").value;
+            const taskTime = document.getElementById("taskTime").value;
+            const taskPriority = document.getElementById("taskPriority").value;
+
+            if (taskInput === '') {
+                alert("Please enter a task");
+                return;
+            }
+
+            const taskList = document.getElementById("taskList");
+            const taskDiv = document.createElement("div");
+            taskDiv.className = "task";
+
+            taskDiv.innerHTML = `
+                <span>
+                    <b>${taskInput}</b> 
+                    <br> 
+                    <small>${taskTime ? taskTime : 'No Time Set'} | Priority: ${taskPriority}</small>
+                </span>
+                <div class="icons">
+                    <i class="fas fa-check" onclick="markComplete(this)"></i>
+                    <i class="fas fa-edit" onclick="editTask(this)"></i>
+                    <i class="fas fa-trash" onclick="deleteTask(this)"></i>
+                </div>
+            `;
+
+            taskList.appendChild(taskDiv);
+
+            document.getElementById("taskInput").value = '';
+            document.getElementById("taskTime").value = '';
+            document.getElementById("taskPriority").selectedIndex = 0;
+        }
+
+        function markComplete(element) {
+            element.parentElement.parentElement.classList.toggle("completed");
+        }
+
+        function editTask(element) {
+            const taskDiv = element.parentElement.parentElement;
+            const taskText = taskDiv.querySelector("span").childNodes[0]; 
+            const smallText = taskDiv.querySelector("small").innerHTML;
+
+            const newTask = prompt("Edit your task:", taskText.textContent.trim());
+            if (newTask) {
+                taskText.innerHTML = `<b>${newTask}</b>`;
+                taskDiv.querySelector("small").innerHTML = smallText; 
+            }
+        }
+
+        function deleteTask(element) {
+            element.parentElement.parentElement.remove();
+        }
+    </script>
+</body>
+</html>
